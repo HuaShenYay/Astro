@@ -1,0 +1,145 @@
+---
+import { sanityClient } from "sanity:client";
+import GlobalHeader from "../../components/GlobalHeader.astro";
+import Navigation from "../../components/Navigation";
+import PortableTextRenderer from "../../components/PortableTextRenderer";
+import "../../styles/global.css";
+
+export async function getStaticPaths() {
+  const posts = await sanityClient.fetch(
+    `*[_type == "post" && defined(slug.current)]{
+      "slug": slug.current
+    }`
+  );
+
+  return posts.map((post: { slug: string }) => ({
+    params: { slug: post.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const post = await sanityClient.fetch(
+  `*[_type == "post" && slug.current == $slug][0]{
+    title,
+    slug,
+    body,
+    publishedAt,
+    _id
+  }`,
+  { slug }
+);
+
+if (!post) {
+  return Astro.redirect("/work");
+}
+---
+
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{post.title} - Zijie Song</title>
+  </head>
+  <body class="bg-[#f5f5f5] text-[#262626] font-sans antialiased">
+    <GlobalHeader title={`/work/${slug}`} />
+    
+    <main class="max-w-4xl mx-auto px-4 md:px-8 pt-20 md:pt-24 pb-16 md:pb-20">
+      <div class="bg-white p-6 md:p-12 lg:p-16">
+        <div class="mb-12 md:mb-16">
+          <Navigation client:load currentPage="work" />
+        </div>
+        
+        <a 
+          href="/work" 
+          class="inline-flex items-center gap-2 text-sm text-[#737373] hover:text-[#262626] transition-colors mb-6 md:mb-8"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back to Work
+        </a>
+        
+        <article>
+          <header class="mb-8 md:mb-12">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-[#262626] tracking-tight leading-tight">
+              {post.title}
+            </h1>
+            {post.publishedAt && (
+              <time 
+                datetime={post.publishedAt} 
+                class="text-sm text-[#737373]"
+              >
+                {new Date(post.publishedAt).toLocaleDateString('zh-CN', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </time>
+            )}
+          </header>
+          
+          <div class="prose prose-lg max-w-none">
+            <PortableTextRenderer client:load value={post.body} />
+          </div>
+        </article>
+        
+        <div class="mt-12 md:mt-16 pt-8 border-t border-[#e5e5e5]">
+          <a 
+            href="/work" 
+            class="inline-flex items-center gap-2 text-sm text-[#737373] hover:text-[#262626] transition-colors"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to Work
+          </a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+  .prose a {
+    color: #262626;
+    text-decoration: underline;
+  }
+  
+  .prose a:hover {
+    color: #525252;
+  }
+  
+  .prose ul,
+  .prose ol {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+  }
+  
+  .prose li {
+    margin: 0.5rem 0;
+    color: #404040;
+    line-height: 1.75;
+  }
+  
+  .prose code {
+    background: #f5f5f5;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+    color: #262626;
+  }
+  
+  .prose pre {
+    background: #f5f5f5;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+  
+  .prose pre code {
+    background: none;
+    padding: 0;
+  }
+</style>
+

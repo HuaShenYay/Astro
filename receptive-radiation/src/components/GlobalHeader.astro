@@ -1,0 +1,24 @@
+---
+interface Props {
+  title?: string;
+}
+
+const { title = "Home" } = Astro.props;
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#e5e5e5]">
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-2.5 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-[#262626]">
+        <path d="M3 2v12l10-6L3 2z" fill="currentColor"/>
+      </svg>
+      <span class="text-sm font-normal text-[#262626]">{title}</span>
+    </div>
+    <button class="p-1.5 hover:bg-[#f5f5f5] rounded transition-colors duration-200">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-[#262626]">
+        <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</header>
+

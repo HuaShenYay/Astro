@@ -1,0 +1,51 @@
+---
+// 导入 Sanity 客户端来抓取数据
+import { sanityClient } from "sanity:client";
+import GlobalHeader from "../components/GlobalHeader.astro";
+import Navigation from "../components/Navigation";
+import "../styles/global.css";
+
+const posts = await sanityClient.fetch(`*[_type == "post"]{title, slug, body, _id}`);
+---
+
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Work - Zijie Song</title>
+  </head>
+  <body class="bg-[#f5f5f5] text-[#262626] font-sans antialiased">
+    <GlobalHeader title="/work" />
+    
+    <main class="max-w-6xl mx-auto px-4 md:px-8 pt-20 md:pt-24 pb-16 md:pb-20">
+      <div class="bg-white p-6 md:p-12 lg:p-16">
+        <div class="mb-12 md:mb-16">
+          <Navigation client:load currentPage="work" />
+        </div>
+        
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 md:mb-10 text-[#262626] tracking-tight">Work</h1>
+        
+        {posts && posts.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {posts.map((post) => (
+              <a 
+                href={`/work/${post.slug?.current || post._id}`}
+                class="group cursor-pointer"
+              >
+                <div class="aspect-video bg-gray-100 rounded-2xl mb-4 overflow-hidden">
+                  <div class="w-full h-full bg-gradient-to-br from-green-100 to-blue-100 group-hover:scale-105 transition-transform duration-500"></div>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold mb-2 group-hover:text-[#525252] transition-colors">{post.title}</h3>
+                <p class="text-gray-500 text-sm">Read more →</p>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p class="text-[#737373]">No work items yet.</p>
+        )}
+      </div>
+    </main>
+  </body>
+</html>
+
+

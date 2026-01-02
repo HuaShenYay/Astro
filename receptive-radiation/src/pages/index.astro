@@ -1,0 +1,63 @@
+---
+// 导入 Sanity 客户端来抓取数据
+import { sanityClient } from "sanity:client";
+import GlobalHeader from "../components/GlobalHeader.astro";
+import Navigation from "../components/Navigation";
+import "../styles/global.css";
+
+const posts = await sanityClient.fetch(`*[_type == "post"]{title, slug, _id}`);
+---
+
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zijie Song - Portfolio</title>
+  </head>
+  <body class="bg-[#f5f5f5] text-[#262626] font-sans antialiased">
+    <GlobalHeader title="Home" />
+    
+    <main class="max-w-6xl mx-auto px-4 md:px-8 pt-20 md:pt-24 pb-16 md:pb-20">
+      <div class="bg-white p-6 md:p-12 lg:p-16">
+        <div class="mb-12 md:mb-16">
+          <Navigation client:load currentPage="home" />
+        </div>
+        
+        <p class="text-[#737373] mb-4 md:mb-5 text-sm md:text-base font-normal">欢迎来到我的乐园</p>
+        
+        <h1 class="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-[1.2] mb-8 md:mb-10 text-[#262626] tracking-tight">
+          Zijie Song,<br />
+          一个人，<br />
+          在这里写点东西，<br />
+          分享点趣事。
+        </h1>
+        
+        <div class="max-w-3xl mb-12 md:mb-16">
+          <p class="text-[#404040] leading-[1.75] text-base md:text-lg font-normal">
+            On the one hand, all you need to do is say what you mean, in your words, in your voice. On the other, there are so many rules to consider! Are you thinking of keywords you should rank for? Are you including links in your text to additional information? Do those links refer back to your own website, which helps boost your SEO? Is what you've written easy to scan? There's a theory that people read in an F-shape pattern, and that this should influence how you structure content on your website. Lots of ins and outs—it's no wonder writers rule the world.
+          </p>
+        </div>
+
+    
+          
+          {posts && posts.length > 0 && (
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mt-8 md:mt-10">
+              {posts.map((post) => (
+                <a 
+                  href={`/work/${post.slug?.current || post._id}`}
+                  class="group cursor-pointer"
+                >
+                  <div class="aspect-video bg-gray-100 rounded-2xl mb-4 overflow-hidden">
+                    <div class="w-full h-full bg-gradient-to-br from-green-100 to-blue-100 group-hover:scale-105 transition-transform duration-500"></div>
+                  </div>
+                  <h3 class="text-lg md:text-xl font-bold group-hover:text-[#525252] transition-colors">{post.title}</h3>
+                  <p class="text-gray-500 text-sm mt-1">Read more →</p>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
