@@ -23,18 +23,17 @@ const posts = await sanityClient.fetch(`*[_type == "post"]{title, slug, _id}`);
           <Navigation client:load currentPage="home" />
         </div>
         
-        <p class="text-[#737373] mb-4 md:mb-5 text-sm md:text-base font-normal">欢迎来到我的乐园</p>
+        <p class="text-[#737373] mb-4 md:mb-5 text-sm md:text-base font-normal">欢迎来到我的世界</p>
         
         <h1 class="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-[1.2] mb-8 md:mb-10 text-[#262626] tracking-tight">
-          Zijie Song,<br />
-          一个人，<br />
-          在这里写点东西，<br />
-          分享点趣事。
+          宋子杰, <br />
+          作品集以及有趣的事情，<br />
+          感谢你的阅读，祝你今天愉快。<br />
         </h1>
         
         <div class="max-w-3xl mb-12 md:mb-16">
           <p class="text-[#404040] leading-[1.75] text-base md:text-lg font-normal">
-            On the one hand, all you need to do is say what you mean, in your words, in your voice. On the other, there are so many rules to consider! Are you thinking of keywords you should rank for? Are you including links in your text to additional information? Do those links refer back to your own website, which helps boost your SEO? Is what you've written easy to scan? There's a theory that people read in an F-shape pattern, and that this should influence how you structure content on your website. Lots of ins and outs—it's no wonder writers rule the world.
+            小学就读于忍者学校，中学就读于霍格沃兹魔法学院，大学就读于希腊学院。目前正在寻找意义。
           </p>
         </div>
 
@@ -42,7 +41,7 @@ const posts = await sanityClient.fetch(`*[_type == "post"]{title, slug, _id}`);
           
           {posts && posts.length > 0 && (
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mt-8 md:mt-10">
-              {posts.map((post) => (
+              {posts.map((post: { title: string; slug?: { current?: string }; _id: string }) => (
                 <a 
                   href={`/work/${post.slug?.current || post._id}`}
                   class="group cursor-pointer"
